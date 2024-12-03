@@ -3,6 +3,16 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
 from .models import Products
 
+class ProductFeaturedListView(ListView):
+    template_name= "products/list.html"
+
+    def get_queryset(self, *args, **kwargs):
+        return Products.objects.featured()
+    
+class ProductFeaturedDetailView(DetailView):
+    queryset = Products.objects.all().featured()
+    template_name= "products/featured-detail.html"
+
 #Class Based Views
 class ProductListView(ListView):
     queryset = Products.objects.all()

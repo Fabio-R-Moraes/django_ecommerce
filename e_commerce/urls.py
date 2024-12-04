@@ -24,7 +24,8 @@ from products.views import (ProductListView,
                             ProductDetailView, 
                             product_detail_view,
                             ProductFeaturedListView,
-                            ProductFeaturedDetailView)
+                            ProductFeaturedDetailView,
+                            ProductDetailSlugView)
 
 urlpatterns = [
     path('', home_page),
@@ -38,6 +39,7 @@ urlpatterns = [
     path('products-fbv/<int:pk>', product_detail_view),
     path('featured/', ProductFeaturedListView.as_view()),
     path('featured/<int:pk>', ProductFeaturedDetailView.as_view()),
+    path('products/<slug:slug>', ProductDetailSlugView.as_view()),
     path('admin/', admin.site.urls),
 ]
 

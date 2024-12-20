@@ -22,6 +22,6 @@ class SearchProductView(ListView):
         print("Consulta", query)
 
         if query is not None:
-            return Products.objects.filter(title__icontains=query)
+            return Products.objects.search(query)
 
         return Products.objects.featured()

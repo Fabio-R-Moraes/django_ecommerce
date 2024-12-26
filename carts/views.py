@@ -1,12 +1,7 @@
 from django.shortcuts import render
+from .models import Cart
 
 def cart_home(request):
-    cart_id = request.session.get("cart_id", None)
-    
-    if cart_id is None:
-        print("Criado um novo carrinho!!!")
-        request.session["cart_id"] = 12
-    else:
-        print("CART_ID já existe...")
+    cart_obj = Cart.objects.new_or_get(request)
 
     return render(request, "carts/home.html", {})

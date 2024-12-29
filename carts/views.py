@@ -27,4 +27,6 @@ def cart_update(request):
         #E o produto se associa a instância do campo M2M
         cart_obj.products.add(product_obj)
 
+    request.session['cart_itens'] = cart_obj.products.count()
+
     return redirect("carts:home")

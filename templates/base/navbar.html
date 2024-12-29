@@ -4,6 +4,7 @@
 {% url 'login' as login_url %}
 {% url 'logout' as logout_url %}
 {% url 'register' as register_url %}
+{% url 'cart:home' as cart_url %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
     <div class="container">
       <a class="navbar-brand" href="{{ home_url }}">
@@ -37,7 +38,13 @@
                 <a href="{{ register_url }}" class="nav-link {% if request.path == register_url %} active {% endif %}">Registre-se</a>
             </li>
           {% endif %}
-          <div class="dropdown">
+          <li class="nav-item {% if request.path == cart_url %}active{% endif %}">
+            <a href="{{ cart_url }}" class="nav-link">{{ request.session.cart_itens }} 
+              <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+          </li>
+
+          <!--<div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Dropdown button
             </button>
@@ -46,7 +53,7 @@
               <li><a class="dropdown-item" href="#">Another action</a></li>
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
-          </div>  
+          </div>-->
         </ul>
         {% include "search/snippets/search-form.html" %}
       </div>

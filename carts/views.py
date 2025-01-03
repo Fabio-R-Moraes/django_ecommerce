@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Cart
 from products.models import Products
+from orders.models import Order
 
 def cart_home(request):
     cart_obj, new_obj = Cart.objects.new_or_get(request)
@@ -30,3 +31,18 @@ def cart_update(request):
     request.session['cart_itens'] = cart_obj.products.count()
 
     return redirect("carts:home")
+
+def checkout_home(request):
+    #Aqui você pega o carrinho
+    cart_obj, cart_created = Cart.objects.new_or_get(request)
+    order_obj = None
+
+    #Se o carrinho acabou de ser criado, ele está zerado
+    #ou se o carrinho já existe, mas não tem nada dentro
+    if cart_created or cart_obj.products.count() == 0:
+        return redirect("cart:home")
+    else:
+        #Aqui a order-pedido associado ao carrinho
+        order_obj, new_order_obj = Order.objects.get_or_create(cart=cart_obj)
+
+    return render(request, "carts/checkout.html", {"object": order_obj})

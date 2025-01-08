@@ -47,6 +47,12 @@ def login_page(request):
             login(request, user)
             print("Login válido!!!")
 
+            try:
+                del request.session['guest_email_id']
+            except:
+                pass
+
+
             if url_has_allowed_host_and_scheme(redirect_path, request.get_host()):
                 return redirect(redirect_path)
             else:

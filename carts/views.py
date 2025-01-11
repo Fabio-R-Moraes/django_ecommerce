@@ -3,8 +3,8 @@ from .models import Cart
 from products.models import Products
 from orders.models import Order
 from accounts.forms import LoginForm, GuestForm
-from accounts.models import GuestEmail
 from billing.models import BillingProfile
+from addresses.forms import AddressForm
 
 def cart_home(request):
     cart_obj, new_obj = Cart.objects.new_or_get(request)
@@ -44,23 +44,22 @@ def checkout_home(request):
     #ou se o carrinho já existe, mas não tem nada dentro
     if cart_created or cart_obj.products.count() == 0:
         return redirect("cart:home")
-    else:
-        #Aqui a order-pedido associado ao carrinho
-        order_obj, new_order_obj = Order.objects.get_or_create(cart=cart_obj)
-        login_form = LoginForm()
-        guest_form = GuestForm()
-        guest_email_id = request.session.get("guest_email_id")
 
-        billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
+    login_form = LoginForm()
+    guest_form = GuestForm()
+    address_form = AddressForm()
 
-        if billing_profile is not None:
-            order_obj, order_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
+    billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
 
-        context = {
-            "object": order_obj,
-            "billing_profile": billing_profile,
-            "login_form": login_form,
-            "guest_form": guest_form,
-        }
+    if billing_profile is not None:
+        order_obj, order_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
+
+    context = {
+        "object": order_obj,
+        "billing_profile": billing_profile,
+        "login_form": login_form,
+        "guest_form": guest_form,
+        "address_form": address_form,
+    }
 
     return render(request, "carts/checkout.html", context)

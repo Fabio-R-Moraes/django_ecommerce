@@ -21,6 +21,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from accounts.views import login_page, register_page, logout_page, guest_register_view
 from .views import home_page, about_page, contact_page
+from addresses.views import checkout_address_create_view
 
 urlpatterns = [
     path('', home_page, name="home"),
@@ -34,6 +35,7 @@ urlpatterns = [
     path('products/', include("products.urls", namespace="products")),
     path('search/', include("search.urls", namespace="search")),
     path('cart/', include("carts.urls", namespace="cart")),
+    path('checkout/address/create/', checkout_address_create_view, name="checkout_address_create"),
     path('admin/', admin.site.urls),
 ]
 

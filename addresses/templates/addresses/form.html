@@ -5,7 +5,7 @@
     {% endif %}
 
     {% if address_type %}
-        <input type="hidden" name="next" value="{{ address_type }}"/>
+        <input type="hidden" name="address_type" value="{{ address_type }}"/>
     {% endif %}
 
     {{ form.as_p }}

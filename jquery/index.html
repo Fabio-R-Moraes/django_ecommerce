@@ -22,6 +22,21 @@
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="row">
+            <div class="col mx-auto">
+                <h1>Formulário</h1>
+                <form class="new-content-form" action="some/url/link" method="post">
+                    <textarea name="content" class="form-control"></textarea>
+                    <input type="submit" value="Salvar"/>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br/><br/>
+    <div class="form-data-submit"></div>
+    <br/><br/>
+
     <h1 class="header">Olá mundo...</h1>
     <h1 class="header">Olá mundo...</h1>
     <h1 class="header" id="header-3">Cabeçalho 3</h1>
@@ -78,46 +93,40 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            //$descriptionItens recebe um array
-            const $descriptionItens = $(".description")
+            const contentForm = $(".new-content-form")
 
-            console.log($descriptionItens.length)
-
-            $.each($descriptionItens, function(index, obj){
-                const item = $(this)
-                const actualHeight = item[0].scrollHeight
-                const shouldBeHeight = item.height()
-
-                console.log("actualHeight", actualHeight)
-                console.log("shouldBeHeight", shouldBeHeight)
-
-                if(actualHeight>shouldBeHeight){
-                    item.css("overflow-y","scroll")
-                }
-            })
-
-            const header3 = $("#header-3")
-
-            header3.click(function(){
-                const $this = $(this)
-
-                console.log($this)
-                console.log(event)
-                window.location.href = 'http://localhost:8080/contabilidade/index.html'
-            })
-
-            const descriptionLinks = $(".description a")
-
-            descriptionLinks.click(function(event){
-                console.log(event)
+            contentForm.submit(function(event){
                 event.preventDefault()
-
                 const $this = $(this)
-                const href = $this.attr("href")
 
-                console.log(href)
-                alert(href)
-                window.location.href = 'http://www.google.com.br'
+                //Versao Serializada
+                console.log("Serializada: ", contentForm.serialize())
+                //O conteudo do textarea
+                const textAreaContent = $(this).find("textArea")
+
+                console.log("Atributo NAME: ", textAreaContent.attr("name"))
+                console.log("Atributo VALUE: ", textAreaContent.val())
+                console.log("Método: ", $(this).attr("method"))
+                console.log("Ação: ", $(this).attr("action"))
+
+                const formMethod = $(this).attr("method")
+                const formAction = $(this).attr("action")
+                const data = {
+                    "content":textAreaContent.val(),
+                    "method":formMethod,
+                    "action":formAction
+                }
+                
+                //$(".form-data-submit").text(textAreaContent.val())
+                $(".form-data-submit").text(textAreaContent.val() + "método: " + formMethod)
+                //String vazia para limpar o campo apos o submit
+                textAreaContent.val("")
+                //Como os dados sao passados para o backend
+                //$.ajax({
+                //    url:
+                //    method:
+                //    data:data
+                //})
             })
         })
     </script>

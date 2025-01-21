@@ -24,11 +24,14 @@
 <body>
     <h1 class="header">Olá mundo...</h1>
     <h1 class="header">Olá mundo...</h1>
+    <h1 class="header" id="header-3">Cabeçalho 3</h1>
     <h1 class="header">Oiii... mundo...</h1>
     <h1 class="header">Oieeeee mundo...</h1>
 
     <p class="description">Primeiro parágrafo</p>
     <p class="description">Segundo parágrafo</p>
+    <p class="description"><a href="#">Link Qualquer</a></p>
+    <!--<p class="description"><a href="/abc/">Link Qualquer</a></p>-->
     <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce at velit nisi. Integer iaculis, tortor vel posuere venenatis, est urna malesuada turpis, et sollicitudin est libero id odio. Nam nec ligula vestibulum, lacinia nisl ut, tristique arcu. In hac habitasse platea dictumst. Proin accumsan consectetur sem, ut lacinia nulla lobortis a. Ut velit purus, maximus et libero ut, elementum accumsan nisi. Ut viverra vestibulum accumsan. Proin dictum ut sapien vel congue. Sed tempor laoreet dui id porttitor.
 
         In pretium ornare condimentum. Quisque facilisis, nisi at suscipit tincidunt, purus velit placerat erat, vel vestibulum diam enim venenatis dui. Nulla imperdiet enim orci, ac pellentesque risus fermentum vitae. Integer posuere finibus mauris vel commodo. Integer eget risus arcu. Morbi non dolor at neque consectetur condimentum ac ut sem. Phasellus in tincidunt velit. Cras vestibulum nisi in massa commodo rhoncus.
@@ -91,6 +94,30 @@
                 if(actualHeight>shouldBeHeight){
                     item.css("overflow-y","scroll")
                 }
+            })
+
+            const header3 = $("#header-3")
+
+            header3.click(function(){
+                const $this = $(this)
+
+                console.log($this)
+                console.log(event)
+                window.location.href = 'http://localhost:8080/contabilidade/index.html'
+            })
+
+            const descriptionLinks = $(".description a")
+
+            descriptionLinks.click(function(event){
+                console.log(event)
+                event.preventDefault()
+
+                const $this = $(this)
+                const href = $this.attr("href")
+
+                console.log(href)
+                alert(href)
+                window.location.href = 'http://www.google.com.br'
             })
         })
     </script>

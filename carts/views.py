@@ -12,9 +12,15 @@ def cart_home(request):
 
     return render(request, "carts/home.html", {"cart": cart_obj})
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
 def cart_update(request):
     print(request.POST)
     product_id = request.POST.get("product_id")
+
+    if is_ajax(request=request):
+        print("Essa é uma requisição Ajax!!!")
 
     if product_id is not None:
         try:

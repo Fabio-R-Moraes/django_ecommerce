@@ -6,6 +6,7 @@ from accounts.forms import LoginForm, GuestForm
 from billing.models import BillingProfile
 from addresses.forms import AddressForm
 from addresses.models import Address
+from django.http import JsonResponse
 
 def cart_home(request):
     cart_obj, new_obj = Cart.objects.new_or_get(request)
@@ -19,9 +20,6 @@ def cart_update(request):
     print(request.POST)
     product_id = request.POST.get("product_id")
 
-    if is_ajax(request=request):
-        print("Essa é uma requisição Ajax!!!")
-
     if product_id is not None:
         try:
             product_obj = Products.objects.get(id=product_id)
@@ -29,16 +27,28 @@ def cart_update(request):
             print("Mostrar mensagem ao usuário...  Esse produto acabou!!!")
             return redirect("cart:home")
 
-    #Cria ou pega a instância já existente do carrinho
-    cart_obj, new_obj = Cart.objects.new_or_get(request)
+        #Cria ou pega a instância já existente do carrinho
+        cart_obj, new_obj = Cart.objects.new_or_get(request)
 
-    if product_obj in cart_obj.products.all():
-        cart_obj.products.remove(product_obj)
-    else:
-        #E o produto se associa a instância do campo M2M
-        cart_obj.products.add(product_obj)
+        if product_obj in cart_obj.products.all():
+            cart_obj.products.remove(product_obj)
+            added = False
+        else:
+            #E o produto se associa a instância do campo M2M
+            cart_obj.products.add(product_obj)
+            added = True
 
-    request.session['cart_itens'] = cart_obj.products.count()
+        request.session['cart_itens'] = cart_obj.products.count()
+        #return redirect(product_obj.get_absolute_url())
+
+        if is_ajax(request=request):
+            print("Essa é uma requisição Ajax!!!")
+            json_data = {
+                "added":added,
+                "removed": not added,
+            }
+
+            return JsonResponse(json_data)
 
     return redirect("carts:home")
 

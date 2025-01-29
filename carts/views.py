@@ -16,6 +16,25 @@ def cart_home(request):
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
+def cart_detail_api_view(request):
+    cart_obj, new_obj = Cart.objects.new_or_get(request)
+    products = [{
+        "id":x.id,
+        "url":x.get_absolute_url(),
+        "name":x.title,
+        "price":x.price
+    }for x in cart_obj.products.all()]
+
+    #products_list = []
+    #for x in cart_obj.products.all():
+    #   products_list.append({
+    #      {"name":x.title, "price":x.price}
+    #   })
+
+    cart_data = {"products":products,"subtotal":cart_obj.subtotal,"total":cart_obj.total}
+
+    return JsonResponse(cart_data)
+
 def cart_update(request):
     print(request.POST)
     product_id = request.POST.get("product_id")

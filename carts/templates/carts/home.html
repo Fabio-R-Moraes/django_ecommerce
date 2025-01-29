@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Carrinho</h1>
     {% if cart.products.exists %}
-        <table class="table">
+        <table class="table cart-table">
             <thead>
                 <tr>
                     <th>#</th>
@@ -11,12 +11,13 @@
                     <th>Preço</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="cart-body">
                 {% for product in cart.products.all %}
-                    <tr>
+                    <tr class="cart-product">
                         <th scope="row">{{ forloop.counter }}</th>
                         <td><a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-                            {% include "products/snippets/update-cart.html" with product=product cart=cart in_cart=True %}
+                            <!--{% include "products/snippets/update-cart.html" with product=product cart=cart in_cart=True %}-->
+                            {% include "carts/snippets/remove-product.html" with product_id=product.id %}
                         </td>
                         <td>{{ product.price }}</td>
                     </tr>

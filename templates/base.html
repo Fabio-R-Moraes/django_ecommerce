@@ -21,11 +21,12 @@
 
             productForm.submit(function(event){
                 event.preventDefault();
-                console.log("O formulário não foi enviado!!!");
+                //console.log("O formulário não foi enviado!!!");
 
                 //O this pega os dados reacionados a esse formulário
                 const thisForm = $(this);
-                const actionEndPoint = thisForm.attr("action");
+                //const actionEndPoint = thisForm.attr("action");
+                const actionEndPoint = thisForm.attr("data-endpoint");
                 const httpMethod = thisForm.attr("method");
                 const formData = thisForm.serialize();
 
@@ -48,8 +49,13 @@
                         }
 
                         const navbarCount = $(".navbar-cart-count")
+                        const currentPath = window.location.href
 
                         navbarCount.text(data.cartItemCount)
+
+                        if(currentPath.indexOf("cart")!=-1){
+                            refreshCart()
+                        }
                     },
                     error:function(errorData){
                         console.log("Erro...")
@@ -57,6 +63,52 @@
                     }
                 })
             })
+            
+            function refreshCart(){
+                //console.log("Excluindo do carrinho atual...")
+                const cartTable = $(".cart-table")
+                const cartBody = cartTable.find(".cart-body")
+                const productsRow = cartBody.find(".cart-product")
+                const currentUrl = window.location.href
+                const refreshCartUrl = '/api/cart/';
+                const refreshCartMethod = 'GET';
+                const data = {};
+
+                //cartBody.html("<h1>Mudou!!!</h1>")
+                $.ajax({
+                    url:refreshCartUrl,
+                    method:refreshCartMethod,
+                    data:data,
+                    success:function(data){
+                        console.log(data)
+                        const hiddenCartItemRemoveForm = $(".cart-item-remove-form")
+
+                        if(data.products.lenght>0){
+                            productsRow.html(" ")
+                            let i = data.products.lenght
+
+                            $.each(data.products,function(index,value){
+                                const newCartItemRemove = hiddenCartItemRemoveForm.clone()
+
+                                newCartItemRemove.css("display","block")
+                                newCartItemRemove.find(".cart-item-product-id").val(value.id)
+                                cartBody.prepend("<tr><th scope=\"row\">"+ i + "</th><td><a href=" + value.url + ">" + value.name + "</a>" + newCartItemRemove.html() + "</td><td>" + value.price + "</td></tr>")
+                                i--
+                            })
+
+                            cartBody.find(".cart-subtotal").text(data.subtotal)
+                            cartBody.find(".cart-total").text(data.total)
+                        }else{
+                            window.location.href = currentUrl
+                        }
+                    },
+                    error:function(errorData){
+                        console.log("Erro...")
+                        console.log(errorData)
+                    }
+                })
+
+            }
         })
     </script>
 </body>

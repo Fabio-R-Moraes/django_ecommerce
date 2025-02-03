@@ -39,3 +39,6 @@ class ContactForm(forms.Form):
             raise forms.ValidationError("Só aceitamos e-mails com <gmail.com>...")
         
         return email
+    
+    #def clean_content(self):
+    #    raise forms.ValidationError("O conteúdo está errado...")

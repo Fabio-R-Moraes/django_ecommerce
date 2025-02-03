@@ -1,5 +1,9 @@
 from django.shortcuts import render
 from .forms import ContactForm
+from django.http import JsonResponse, HttpResponse
+
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 def home_page(request):
     print(request.session.get("first_name", "Unknow"))
@@ -30,6 +34,15 @@ def contact_page(request):
 
     if contact_form.is_valid():
         print(contact_form.cleaned_data)
+
+        if is_ajax(request):
+            return JsonResponse({"message":"Obrigado!!!"})
+        
+    if contact_form.errors:
+        errors = contact_form.errors.as_json()
+
+        if is_ajax(request):
+            return HttpResponse(errors, status=400, content_type="application/json")
 
     #if request.method == "POST":
     #    print(request.POST)

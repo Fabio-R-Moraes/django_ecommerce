@@ -1,3 +1,4 @@
+//This is the new way to do form ajax csrf token in Django - Using Fetch API
 $(document).ready(function(){
     //using jQuery
     function getCookie(name){
@@ -7,7 +8,7 @@ $(document).ready(function(){
             const cookies = document.cookie.split(';');
 
             for(let i = 0; i < cookies.length; i++ ){
-                const cookie = jQuery.trim(cookies[i]);
+                const cookie = cookies[i].trim();
 
                 //Does this cookie string begin with the name we want?
                 if(cookie.substring(0, name.length + 1) === (name + '=')){
@@ -19,21 +20,22 @@ $(document).ready(function(){
         return cookieValue;
     }
     const csrftoken = getCookie('csrftoken');
+    console.log("CSRF TokenL: ",csrftoken)
 
-    function csrfSafeMethod(method){
-        //These HTTP methods do not require CSRF protection
-        return(/^(GET|HEAD|OPTION|TRACE)$/.test(method));
+    function sendData(url, data, method='POST'){
+        console.log("URL: ", url)
+
+        return fetch(url, {
+            method: method,
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify(data)
+        });
     }
-
-    $.ajaxSetup({
-        beforeSend: function(xhr, settings){
-            //csrfSafeMethod return false to POST and
-            if(!csrfSafeMethod(settings.type) && !this.crossDomain){
-                console.log("Settings Type: " + settings.type)
-                console.log("CSRF TOKEN: " + csrftoken)
-                console.log("XHR: " + xhr.global)
-                xhr.setRequestHeader("X-CSRFToken",csrftoken);
-            }
-        }
-    })
+    const url=window.location.pathname;
+    sendData(url)
 })

@@ -16,28 +16,28 @@ class UserAdminCreationForm(forms.ModelForm):
         model = User
         fields = ['email']
 
-        def clean(self):
-            """
-            Verify both the passwords match
-            """
-            cleaned_data = super().clean()
-            password = cleaned_data.get("password")
-            password_2 = cleaned_data.get("password_2")
+    def clean(self):
+        """
+        Verify both the passwords match
+        """
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        password_2 = cleaned_data.get("password_2")
 
-            if password is not None and password != password_2:
-                self.add_error("password_2", "Yours passwords must match")
+        if password is not None and password != password_2:
+            self.add_error("password_2", "Yours passwords must match")
 
-            return cleaned_data
+        return cleaned_data
         
-        def save(self, commit=True):
-            #Save the provided password in hashed format
-            user = super(UserAdminCreationForm, self).save(commit=False)
-            user.set_password(self.cleaned_data["password"])
+    def save(self, commit=True):
+        #Save the provided password in hashed format
+        user = super(UserAdminCreationForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password"])
 
-            if commit:
-                user.save()
+        if commit:
+            user.save()
 
-            return user
+        return user
         
 class UserAdminChangeForm(forms.ModelForm):
     """
@@ -49,7 +49,7 @@ class UserAdminChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'active', 'admin']
+        fields = ['full_name', 'email', 'password', 'active', 'admin']
 
         def clean_password(self):
             #Regardless of what the user provides, return the initial value.

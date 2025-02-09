@@ -3,7 +3,7 @@ from .models import GuestEmail
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .forms import UserAdminCreationForm, UserAdminChangeForm
+from accounts.forms import UserAdminCreationForm, UserAdminChangeForm
 
 User = get_user_model()
 
@@ -15,12 +15,12 @@ class UserAdmin(BaseUserAdmin):
     #The fields to be used in displaying the User model
     #These override the definitions on the base UserAdmin
     #That reference the specific fields on auth.User
-    list_display = ['email', 'admin']
-    list_filter = ['admin', 'staff', 'active']
+    list_display = ['email','admin']
+    list_filter = ['admin','staff','active']
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Personal Info', {'fields': ()}),
-        ('Permissions', {'fields': ('admin', 'staff', 'active')}),
+        (None, {'fields': ('email','password')}),
+        ('Personal Info', {'fields':('full_name',)}),
+        ('Permissions', {'fields':('admin','staff','active')}),
     )
 
     #add_fieldsets is not standard ModelAdmin attribute. UserAdmin
@@ -28,11 +28,11 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password', 'password_2')
+            'fields': ('email','password','password_2')
         }),
     )
 
-    search_fields = ['email']
+    search_fields = ['email', 'full_name']
     ordering = ['email']
     filter_horizontal = ()
 

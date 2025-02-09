@@ -7,7 +7,7 @@ class UserManager(BaseUserManager):
     def get_by_natural_key(self, email):
         return self.get(email=email)
     
-    def create_user(self, email, password=None, is_active=True, is_staff=False, is_admin=False):
+    def create_user(self, email, full_name=None, password=None, is_active=True, is_staff=False, is_admin=False):
         if not email:
             raise ValueError("O usuário deve ter um endereço de e-mail...")
         
@@ -15,6 +15,7 @@ class UserManager(BaseUserManager):
             raise ValueError("O usuário precisa ter uma senha...")
         
         user_obj = self.model(
+            full_name = full_name,
             email = self.normalize_email(email)
         )
         user_obj.set_password(password) #muda a senha
@@ -25,18 +26,20 @@ class UserManager(BaseUserManager):
 
         return user_obj
     
-    def create_staffuser(self, email, password=None):
+    def create_staffuser(self, email, full_name=None, password=None):
         user = self.create_user(
             email,
+            full_name=full_name,
             password=password,
             is_staff=True
         )
 
         return user
     
-    def create_superuser(self, email, password=None):
+    def create_superuser(self, email, full_name=None, password=None):
         user = self.create_user(
             email,
+            full_name=full_name,
             password=password,
             is_staff=True,
             is_admin=True
@@ -45,7 +48,7 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser):
-    #full_name = models.CharField(max_length=255, blank=True, null=True)
+    full_name = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(max_length=255, unique=True)
     active = models.BooleanField(default=True) #Can do login
     staff = models.BooleanField(default=False) #staff user, non superuser
@@ -65,6 +68,9 @@ class User(AbstractBaseUser):
         return self.email
     
     def get_full_name(self):
+        if self.full_name:
+            return self.full_name
+        
         return self.email
     
     def get_short_name(self):

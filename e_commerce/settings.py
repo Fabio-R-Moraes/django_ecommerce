@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'orders',
     'billing',
     'addresses',
+    'analytics',
 ]
 
 DEFAULT_AUTO_FIELD="django.db.models.BigAutoField"

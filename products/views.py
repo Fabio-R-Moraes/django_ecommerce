@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
 from .models import Products
 from carts.models import Cart
+from analytics.mixin import ObjectViewedMixin
 
 class ProductFeaturedListView(ListView):
     template_name= "products/list.html"
@@ -10,7 +11,7 @@ class ProductFeaturedListView(ListView):
     def get_queryset(self, *args, **kwargs):
         return Products.objects.featured()
     
-class ProductFeaturedDetailView(DetailView):
+class ProductFeaturedDetailView(ObjectViewedMixin, DetailView):
     queryset = Products.objects.all().featured()
     template_name= "products/featured-detail.html"
 
@@ -35,7 +36,7 @@ def product_list_view(request):
 
     return render(request,"products/list.html", context)
 
-class ProductDetailSlugView(DetailView):
+class ProductDetailSlugView(ObjectViewedMixin, DetailView):
     queryset = Products.objects.all()
     template_name= "products/detail.html"
 
@@ -58,10 +59,13 @@ class ProductDetailSlugView(DetailView):
             qs = Products.objects.filter(slug=slug, active=True)
             instance = qs.first()
 
+        #instance is the sebder
+        #object_viewed_signal.send(instance.__class__, instance=instance, request=request)
+
         return instance
 
 #Class Based Views
-class ProductDetailView(DetailView):
+class ProductDetailView(ObjectViewedMixin, DetailView):
     #queryset = Products.objects.all()
     template_name= "products/detail.html"
 

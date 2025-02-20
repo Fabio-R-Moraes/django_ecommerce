@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+import stripe
+
+#Setup enviroment variables
+env = environ.Env(DEBUG=(bool,False),)
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +32,10 @@ SECRET_KEY = 'django-insecure-4yz(lda7268j69hg+j)s7!9940lf4)0jdyht0*g#8ahz)#322h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+
+#Stripe configuration
+stripe.api_key = env('STRIPE_API_KEY')
 
 
 # Application definition

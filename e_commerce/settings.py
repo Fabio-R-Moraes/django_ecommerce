@@ -27,15 +27,19 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4yz(lda7268j69hg+j)s7!9940lf4)0jdyht0*g#8ahz)#322h'
+#SECRET_KEY = 'django-insecure-4yz(lda7268j69hg+j)s7!9940lf4)0jdyht0*g#8ahz)#322h'
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-4yz(lda7268j69hg+j)s7!9940lf4)0jdyht0*g#8ahz)#322h')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 #Stripe configuration
-stripe.api_key = env('STRIP_API_KEY')
+#stripe.api_key = env('STRIP_API_KEY')
+STRIPE_API_KEY = env('STRIP_API_KEY')
+STRIPE_PUB_KEY = env('STRIPE_PUB_KEY')
 
 
 # Application definition

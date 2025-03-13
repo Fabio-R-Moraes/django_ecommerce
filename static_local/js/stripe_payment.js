@@ -84,17 +84,18 @@ $(document).ready(function() {
                     if (result.error) {
                         console.error("Erro ao confirmar o pagamento:", result.error);
                         showMessage(result.error.message);
+                        setTimeout(function(){
+                            window.location.href = "payment-failed/";
+                        }, 3000)
                     } else {
                         if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
-                            showMessage("Pagamento realizado com sucesso!");
+                            showMessage("Pagamento realizado com sucesso!", false);
                             console.log("Pagamento realizado com sucesso! Redirecionando...");
 
                             // Manter a mensagem visível por 3 segundos antes de redirecionar
                             setTimeout(function() {
-                                const nextUrlElement = $('#next-url');
-                                const nextUrl = nextUrlElement.data('url') || '/';
-                                window.location.href = nextUrl;
-                            }, 10000);
+                                window.location.href = "payment-success/";
+                            }, 3000);
                         } else {
                             console.error("Status do pagamento inesperado:", result.paymentIntent.status);
                             showMessage("Pagamento não foi bem-sucedido. Tente novamente.");
@@ -111,9 +112,15 @@ $(document).ready(function() {
             console.error("Formulário de pagamento não encontrado");
         }
 
-        function showMessage(messageText) {
+        function showMessage(messageText, isError) {
             const messageContainer = $("#payment-message");
             messageContainer.text(messageText).removeClass("hidden");
+
+            if (isError) {
+                messageContainer.addClass("error-message");
+            } else {
+                messageContainer.removeClass("error-message");
+            }
 
             // Pode comentar se quiser esse setTimeout, usado só para dar
             // tempo de ver a mensagem
